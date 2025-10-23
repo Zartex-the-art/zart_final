@@ -4,14 +4,23 @@ import type React from "react"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts"
 
 interface ProgressPieChartProps {
-  completed: number
-  total: number
+  progress?: number
+  completed?: number
+  total?: number
 }
 
-const ProgressPieChart: React.FC<ProgressPieChartProps> = ({ completed, total }) => {
-  const remaining = total - completed
+export const ProgressPieChart: React.FC<ProgressPieChartProps> = ({ progress = 0, completed = 0, total = 100 }) => {
+  let completedValue = completed
+  let totalValue = total
+
+  if (progress > 0) {
+    completedValue = Math.round((progress / 100) * 100)
+    totalValue = 100
+  }
+
+  const remaining = totalValue - completedValue
   const data = [
-    { name: "Completed", value: completed },
+    { name: "Completed", value: completedValue },
     { name: "Remaining", value: remaining },
   ]
 

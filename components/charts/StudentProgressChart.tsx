@@ -4,13 +4,23 @@ import type React from "react"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
 
 interface StudentProgressChartProps {
-  data: Array<{ name: string; progress: number }>
+  data?: Array<{ name: string; progress: number }>
 }
 
-const StudentProgressChart: React.FC<StudentProgressChartProps> = ({ data }) => {
+export const StudentProgressChart: React.FC<StudentProgressChartProps> = ({ data = [] }) => {
+  const chartData =
+    data.length > 0
+      ? data
+      : [
+          { name: "Week 1", progress: 20 },
+          { name: "Week 2", progress: 35 },
+          { name: "Week 3", progress: 50 },
+          { name: "Week 4", progress: 75 },
+        ]
+
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data}>
+      <BarChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
         <XAxis dataKey="name" stroke="#9CA3AF" />
         <YAxis stroke="#9CA3AF" />

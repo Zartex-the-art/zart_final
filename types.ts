@@ -12,11 +12,13 @@ export interface User {
 
 export interface Student extends User {
   role: UserRole.Student
+  rollNumber: string
   assignedLearningPathId?: string
 }
 
 export interface Admin extends User {
   role: UserRole.Admin
+  password?: string
 }
 
 export interface JobDescription {
@@ -41,4 +43,10 @@ export interface LearningPath {
   jobTitle: string
   company: string
   topics: LearningCategory
+}
+
+export interface AuthCredentials {
+  email?: string
+  password: string
+  rollNumber?: string
 }

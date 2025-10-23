@@ -10,7 +10,7 @@ import {
   type LearningCategory,
   type JobDescription,
 } from "@/types"
-import { DUMMY_STUDENTS, DUMMY_LEARNING_PATHS } from "@/constants"
+import { DUMMY_STUDENTS, DUMMY_LEARNING_PATHS, ADMIN_CREDENTIALS, STUDENT_PASSWORD } from "@/constants"
 import { generateLearningPathFromJD } from "@/app/actions/generateLearningPath"
 
 interface AppContextType {
@@ -18,7 +18,10 @@ interface AppContextType {
   students: Student[]
   learningPaths: LearningPath[]
   jobDescriptions: JobDescription[]
-  login: (role: UserRole) => void
+  login: (credentials: { email?: string; password: string; rollNumber?: string; role: UserRole }) => {
+    success: boolean
+    error?: string
+  }
   logout: () => void
   generateAndAssignPath: (
     jobDescription: string,
@@ -41,11 +44,24 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [learningPaths, setLearningPaths] = useState<LearningPath[]>(DUMMY_LEARNING_PATHS)
   const [jobDescriptions, setJobDescriptions] = useState<JobDescription[]>([])
 
-  const login = (role: UserRole) => {
+  const login = (credentials: { email?: string; password: string; rollNumber?: string; role: UserRole }) => {
+    const { email, password, rollNumber, role } = credentials
+
     if (role === UserRole.Admin) {
-      setUser({ id: "A1", name: "Admin User", email: "admin@smartlms.com", role: UserRole.Admin })
+      // Admin login validation
+      if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
+        setUser({ id: "A1", name: "Admin User", email: ADMIN_CREDENTIALS.email, role: UserRole.Admin })
+        return { success: true }
+      }
+      return { success: false, error: "Invalid email or password" }
     } else {
-      setUser(students[0])
+      // Student login validation
+      const student = students.find((s) => s.rollNumber === rollNumber && s.email === email)
+      if (student && password === STUDENT_PASSWORD) {
+        setUser(student)
+        return { success: true }
+      }
+      return { success: false, error: "Invalid roll number, email, or password" }
     }
   }
 

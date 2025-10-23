@@ -3,7 +3,7 @@
 import { GoogleGenAI, Type } from "@google/genai"
 import type { LearningCategory } from "@/types"
 
-const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY
+const API_KEY = process.env.GEMINI_API_KEY
 
 const generateDummyPath = (): LearningCategory => {
   return {
@@ -27,9 +27,7 @@ const generateDummyPath = (): LearningCategory => {
 
 export async function generateLearningPathFromJD(jobDescription: string): Promise<LearningCategory> {
   if (!API_KEY) {
-    console.warn(
-      "Gemini API key not found. Using dummy data. Please set the NEXT_PUBLIC_GEMINI_API_KEY environment variable.",
-    )
+    console.warn("Gemini API key not found. Using dummy data. Please set the GEMINI_API_KEY environment variable.")
     return generateDummyPath()
   }
 
